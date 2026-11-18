@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f1a17">
+<title>Dashboard Warmindo 216</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+/* ===== Sistem desain Warmindo 216 (dipakai dashboard dan halaman pemesanan) ===== */
+:root {
+  --bg:#f6f3ee; --surface:#ffffff; --ink:#1f1a17; --muted:#6b625b; --line:#e8e2d9; --line2:#f0ebe3;
+  --brand:#c62828; --brand-d:#a81f1f; --brand-soft:#fdecec; --amber:#f5a623; --amber-soft:#fff4dc;
+  --ok:#1b8a5a; --ok-soft:#e6f6ee; --info:#2563eb; --info-soft:#e8f0fe; --warn:#9a6700; --dark:#1f1a17; --dark2:#2b2420;
+  --r:14px; --r-s:10px; --sh1:0 1px 2px rgba(31,26,23,.05),0 1px 1px rgba(31,26,23,.03); --sh2:0 6px 24px rgba(31,26,23,.08);
+  --font:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box} html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--font);-webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0;line-height:1.25;letter-spacing:-.01em} h2{font-size:1.05rem} h3{font-size:.98rem}
+button,input,select,textarea{font:inherit;color:inherit} button{cursor:pointer}
+:focus-visible{outline:3px solid rgba(198,40,40,.35);outline-offset:2px}
+.hidden{display:none!important} .muted{color:var(--muted)} .sm{font-size:.84rem} .b{font-weight:700}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid transparent;border-radius:var(--r-s);background:var(--brand);color:#fff;font-weight:700;padding:10px 16px;min-height:42px;transition:background .15s,transform .05s,box-shadow .15s;text-decoration:none;white-space:nowrap}
+.btn:hover{background:var(--brand-d)} .btn:active{transform:translateY(1px)} .btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.sec{background:#fff;color:var(--ink);border-color:var(--line);box-shadow:var(--sh1)} .btn.sec:hover{background:#faf8f5}
+.btn.ghost{background:transparent;color:var(--brand);border-color:transparent;padding:8px 10px} .btn.ghost:hover{background:var(--brand-soft)}
+.btn.ok{background:var(--ok)} .btn.ok:hover{background:#15714a} .btn.dark{background:var(--dark)} .btn.dark:hover{background:#000}
+.btn.danger{background:#fff;color:var(--brand);border-color:#f3c4c4} .btn.danger:hover{background:var(--brand-soft)}
+.btn.s{min-height:34px;padding:6px 12px;font-size:.86rem;border-radius:9px} .btn.full{width:100%} .btn.lg{min-height:50px;font-size:1rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh1);padding:16px;margin-bottom:12px}
+.card>h2,.card>h3{margin-bottom:10px}
+.badge{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:2px 9px;font-size:.74rem;font-weight:700;background:#f0ece6;color:var(--muted);white-space:nowrap}
+.badge.brand{background:var(--brand-soft);color:var(--brand)} .badge.ok{background:var(--ok-soft);color:var(--ok)} .badge.info{background:var(--info-soft);color:var(--info)} .badge.warn{background:var(--amber-soft);color:var(--warn)} .badge.dark{background:var(--dark);color:#fff}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:999px;padding:6px 14px;font-weight:600;font-size:.88rem;box-shadow:var(--sh1)} .chip:hover{border-color:#d6cdbf}
+.chip.on{background:var(--dark);border-color:var(--dark);color:#fff}
+.in,select.in,textarea.in{width:100%;background:#fff;border:1px solid #dcd4c8;border-radius:var(--r-s);padding:10px 12px;min-height:44px;transition:border-color .15s,box-shadow .15s}
+.in:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(198,40,40,.14)} textarea.in{resize:vertical;min-height:70px}
+label.l{display:block;font-weight:600;font-size:.86rem;margin:12px 0 5px} label.l .req{color:var(--brand)}
+.hint{font-size:.8rem;color:var(--muted);margin-top:4px} .err{color:var(--brand);font-weight:600;font-size:.88rem;min-height:1.2em;margin:6px 0}
+.row{display:flex;align-items:center;gap:10px} .between{justify-content:space-between} .grow{flex:1;min-width:0} .wrap{flex-wrap:wrap}
+.divider{height:1px;background:var(--line2);margin:12px 0}
+.empty{text-align:center;color:var(--muted);padding:36px 12px} .empty b{display:block;color:var(--ink);font-size:1rem;margin:6px 0 2px}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:var(--dark);color:#fff;font-weight:600;border-radius:12px;padding:11px 16px;z-index:80;max-width:92%;box-shadow:var(--sh2);font-size:.9rem}
+.modal{position:fixed;inset:0;background:rgba(31,26,23,.55);display:grid;place-items:center;z-index:70;padding:14px;overflow:auto;backdrop-filter:blur(2px)}
+.modal .box{background:#fff;border-radius:18px;width:100%;max-width:460px;box-shadow:var(--sh2);padding:18px;max-height:92vh;overflow:auto}
+.sw{position:relative;width:46px;height:26px;flex:none;display:inline-block} .sw input{opacity:0;position:absolute;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.sw i{position:absolute;inset:0;background:#d9d1c5;border-radius:999px;transition:background .15s} .sw i::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;background:#fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .15s}
+.sw input:checked+i{background:var(--ok)} .sw input:checked+i::after{transform:translateX(20px)} .sw input:focus-visible+i{outline:3px solid rgba(198,40,40,.35);outline-offset:2px}
+.sw.bad input:checked+i{background:var(--brand)}
+.av{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-weight:800;flex:none;color:var(--ink)}
+.bar{height:8px;border-radius:99px;background:#efe9df;overflow:hidden} .bar>i{display:block;height:100%;border-radius:99px;background:var(--ok)} .bar.warn>i{background:var(--amber)} .bar.bad>i{background:var(--brand)}
+@media (prefers-reduced-motion:no-preference){.fade{animation:fade .28s both}@keyframes fade{from{opacity:0;transform:translateY(8px)}}}
+/* ===== Dashboard ===== */
+#login{position:fixed;inset:0;z-index:90;overflow:auto;display:grid;place-items:center;padding:20px;background:radial-gradient(900px 500px at 15% -10%,rgba(198,40,40,.35),transparent 60%),radial-gradient(700px 400px at 100% 110%,rgba(245,166,35,.22),transparent 55%),var(--dark)}
+.login-card{width:100%;max-width:380px;background:#fff;border-radius:22px;box-shadow:0 20px 60px rgba(0,0,0,.35);padding:26px 22px 22px;text-align:center}
+.logo{display:inline-flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.01em}
+.logo i{width:38px;height:38px;border-radius:11px;background:var(--brand);display:grid;place-items:center;color:#fff;font-style:normal;font-size:1.1rem;box-shadow:0 4px 12px rgba(198,40,40,.4)}
+.login-card h1{font-size:1.35rem;margin:16px 0 4px} .login-card p{margin:0 0 14px;color:var(--muted);font-size:.9rem}
+.dots{display:flex;justify-content:center;gap:12px;height:18px;margin:6px 0 4px}
+.dots i{width:13px;height:13px;border-radius:50%;border:2px solid #cfc6b8;transition:all .12s} .dots i.f{background:var(--brand);border-color:var(--brand);transform:scale(1.1)}
+.dots.shake{animation:geser .4s} @keyframes geser{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+.pad button{height:56px;border-radius:14px;border:1px solid var(--line);background:#faf8f5;font-size:1.3rem;font-weight:700;transition:background .1s}
+.pad button:active{background:var(--brand-soft)} .pad .go{background:var(--brand);color:#fff;border-color:var(--brand);font-size:1rem} .pad .go:disabled{opacity:.6}
+.pin-h{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.shell{min-height:100vh} .side{display:none}
+.topbar{position:sticky;top:0;z-index:40;background:rgba(246,243,238,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.topbar .in-{max-width:760px;margin:0 auto;padding:10px 14px;display:flex;align-items:center;gap:10px}
+.topbar h1{font-size:1.05rem;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 11px;font-size:.76rem;font-weight:700;background:#f0ece6;color:var(--muted)}
+.pill::before{content:"";width:8px;height:8px;border-radius:50%;background:#bdb3a5} .pill.buka{background:var(--ok-soft);color:var(--ok)} .pill.buka::before{background:var(--ok)} .pill.tutup{background:var(--brand-soft);color:var(--brand)} .pill.tutup::before{background:var(--brand)}
+.main{max-width:760px;margin:0 auto;padding:14px 14px 100px}
+.bottom{position:fixed;left:0;right:0;bottom:0;z-index:50;background:#fff;border-top:1px solid var(--line);display:flex;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 20px rgba(31,26,23,.06)}
+.bottom button,.side button.nv{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--muted);font-size:.7rem;font-weight:600;position:relative;border-radius:12px}
+.bottom button{flex:1;padding:6px 2px} .bottom button.on{color:var(--brand)}
+.bottom svg,.side svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.bdg{position:absolute;top:0;left:calc(50% + 4px);min-width:17px;height:17px;border-radius:9px;background:var(--brand);color:#fff;font-size:.66rem;font-weight:800;display:grid;place-items:center;padding:0 4px;border:2px solid #fff}
+.more{position:fixed;left:10px;right:10px;bottom:76px;z-index:55;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--sh2);padding:8px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.more button{border:0;background:none;padding:12px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.78rem;font-weight:600;border-radius:12px} .more button:active,.more button.on{background:var(--brand-soft);color:var(--brand)}
+.more svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.hero{display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:var(--r);padding:16px 18px;margin-bottom:12px;color:#fff;background:linear-gradient(135deg,#2b2420,#1f1a17 55%,#3a1f1c);box-shadow:var(--sh2);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-40px;top:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(198,40,40,.55),transparent 65%)}
+.hero .hi{opacity:.8;font-size:.86rem} .hero .clock{font-size:2.2rem;font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:2px 0} .hero .tg{opacity:.75;font-size:.82rem;text-transform:capitalize}
+.ringbox{--p:0;position:relative;z-index:1;flex:none;width:84px;height:84px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--amber) calc(var(--p)*1%),rgba(255,255,255,.18) 0)}
+.ringin{width:64px;height:64px;border-radius:50%;background:#2b2420;display:grid;place-items:center;align-content:center;text-align:center;line-height:1.1} .ringin b{font-size:1.1rem} .ringin span{font-size:.62rem;opacity:.8}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;box-shadow:var(--sh1);display:flex;align-items:center;gap:12px}
+.kpi .ic{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;flex:none} .kpi .ic svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.kpi b{display:block;font-size:1.35rem;line-height:1.1} .kpi span{font-size:.78rem;color:var(--muted);font-weight:600}
+.kpi.wide{grid-column:1/-1} .kpi.pulse .ic{animation:denyut 1.6s infinite} @keyframes denyut{50%{box-shadow:0 0 0 7px rgba(245,166,35,.25)}}
+.t-amber{background:var(--amber-soft);color:var(--warn)} .t-info{background:var(--info-soft);color:var(--info)} .t-ok{background:var(--ok-soft);color:var(--ok)} .t-brand{background:var(--brand-soft);color:var(--brand)}
+.tools{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap} .tools .in{flex:1;min-width:150px}
+.ord{border-left:5px solid var(--amber)} .ord.s-Diproses{border-left-color:var(--info)} .ord.s-Selesai{border-left-color:var(--ok)} .ord.s-Batal{border-left-color:#bdb3a5;opacity:.75}
+.ord .head{display:flex;gap:12px;align-items:flex-start} .ord .nm{font-weight:700} .ord .age{font-weight:800} .ord .age.late{color:var(--brand)}
+.items{list-style:none;margin:12px 0 4px;padding:0} .items li{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px dashed var(--line)} .items li:last-child{border-bottom:0} .items .q{color:var(--brand);font-weight:800}
+.tot{display:flex;justify-content:space-between;align-items:center;font-weight:800;padding-top:8px;border-top:1px solid var(--line)}
+.note{background:#faf6ef;border-radius:10px;padding:8px 10px;margin-top:10px;font-size:.88rem}
+.steps{display:flex;align-items:center;margin:12px 0 2px;font-size:.72rem;font-weight:700;color:#b6ab9b} .st{display:flex;align-items:center;gap:5px} .st i{width:12px;height:12px;border-radius:50%;border:2px solid #d6cdbf;background:#fff}
+.st.on{color:var(--ink)} .st.on i{background:var(--ok);border-color:var(--ok)} .st.cur i{background:var(--amber);border-color:var(--amber);box-shadow:0 0 0 4px rgba(245,166,35,.25)}
+.ln{flex:1;height:2px;background:#e8e2d9;margin:0 6px} .ln.on{background:var(--ok)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px} .prim{margin-top:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px} .stat{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:12px;text-align:center;box-shadow:var(--sh1)} .stat b{display:block;font-size:1.15rem;color:var(--brand);line-height:1.2} .stat span{font-size:.76rem;color:var(--muted)}
+.bars .r{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:.88rem} .bars .l{flex:none;width:34%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .bars .v{margin-left:auto;font-weight:700}
+.rk{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:7px;background:var(--dark);color:#fff;font-size:.72rem;font-weight:800;flex:none}
+.mrow{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:#fcfbf9} .mopt{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px} .mopt label{display:flex;align-items:center;gap:6px;font-weight:600;font-size:.88rem}
+.isi{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px dashed var(--line);font-weight:600}
+.cnt{display:flex;align-items:center;gap:10px} .cnt button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#fff;font-weight:800;font-size:1.1rem} .cnt output{min-width:2ch;text-align:center;font-weight:800}
+.bahan .big{font-size:1.9rem;font-weight:800;line-height:1;margin:8px 0 6px} .bahan .big small{font-size:.8rem;color:var(--muted);font-weight:600}
+.thread{height:46vh;overflow:auto;background:#faf6ef;border-radius:12px;padding:10px;margin:12px 0;display:flex;flex-direction:column;gap:8px}
+.bub{max-width:82%;padding:8px 11px;border-radius:14px;font-size:.9rem;white-space:pre-wrap;word-break:break-word;box-shadow:var(--sh1)} .bub small{display:block;opacity:.6;font-size:.68rem;margin-top:3px}
+.bub.in{align-self:flex-start;background:#fff;border-bottom-left-radius:4px} .bub.out{align-self:flex-end;background:#e7f4ec;border-bottom-right-radius:4px} .bub.out.adm{background:#fde8e8}
+.composer{display:flex;gap:8px;align-items:flex-end} .composer .in{flex:1}
+.logrow{font-size:.84rem;border-bottom:1px dashed var(--line);padding:6px 0}
+.sehat .r{display:flex;gap:10px;align-items:flex-start;margin:8px 0;font-size:.9rem} .sehat .d{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;flex:none;font-size:.7rem;font-weight:800;color:#fff;margin-top:1px}
+.d.ok{background:var(--ok)} .d.bad{background:var(--brand)} .d.info{background:#b6ab9b}
+@media(min-width:980px){
+  .shell{display:grid;grid-template-columns:250px 1fr} .bottom,.more{display:none!important}
+  .side{display:flex;flex-direction:column;position:sticky;top:0;height:100vh;background:var(--dark);color:#fff;padding:20px 14px}
+  .side .logo{color:#fff;margin:2px 6px 22px} .side nav{display:flex;flex-direction:column;gap:2px;flex:1}
+  .side button.nv{flex-direction:row;gap:12px;padding:11px 12px;font-size:.92rem;color:#cdbfb0;text-align:left;width:100%} .side button.nv:hover{background:rgba(255,255,255,.07);color:#fff} .side button.nv.on{background:var(--brand);color:#fff}
+  .side .bdg{position:static;margin-left:auto;border-color:transparent} .side .who{border-top:1px solid rgba(255,255,255,.12);padding-top:14px;font-size:.84rem;color:#cdbfb0}
+  .topbar .in-{max-width:1040px;padding:14px 28px} .main{max-width:1040px;padding:18px 28px 40px}
+  .kpis{grid-template-columns:repeat(5,1fr)} .kpi{flex-direction:column;align-items:flex-start} .kpi.wide{grid-column:auto}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start} .grid2>.card{margin:0}
+  #list{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start} #list>.card{margin:0} #list>.empty{grid-column:1/-1}
+  .toast{bottom:28px}
+}
+</style>
+</head>
+<body>
+<section id="login">
+  <div class="login-card">
+    <span class="logo"><i>W</i>Warmindo 216</span>
+    <h1>Masuk ke dashboard</h1>
+    <p>Masukkan PIN (maksimal 6 angka)</p>
+    <div class="dots" id="dots" aria-hidden="true"></div>
+    <input id="pin" class="pin-h" type="password" inputmode="numeric" autocomplete="current-password" maxlength="6" aria-label="PIN">
+    <p class="err" id="lerr" role="alert"></p>
+    <div class="pad" id="pad">
+      <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+      <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+      <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+      <button data-k="del" aria-label="Hapus satu angka">&#9003;</button><button data-k="0">0</button><button class="go" id="masuk">Masuk</button>
+    </div>
+  </div>
+</section>
+
+<div id="app" class="hidden">
+  <div class="shell">
+    <aside class="side">
+      <span class="logo"><i>W</i>Warmindo 216</span>
+      <nav id="sideNav"></nav>
+      <div class="who"><div id="whoRole" class="b"></div><div class="muted" style="color:#a99c8d">Dashboard operasional</div><button class="btn sec s" id="keluar2" style="margin-top:10px">Keluar</button></div>
+    </aside>
+    <div>
+      <header class="topbar"><div class="in-"><h1 id="judul">Pesanan</h1><span class="pill" id="tokoPill"></span><button class="btn sec s" id="keluar">Keluar</button></div></header>
+      <main class="main">
+        <section id="v-pesanan" class="view">
+          <div class="hero">
+            <div style="position:relative;z-index:1"><div class="hi" id="hello"></div><div class="clock" id="clock"></div><div class="tg" id="tgl"></div></div>
+            <div class="ringbox" id="ringBox"><div class="ringin"><b id="ringPct">0%</b><span>selesai</span></div></div>
+          </div>
+          <div class="kpis" id="kpis"></div>
+          <div class="tools"><input id="cari" class="in" type="search" placeholder="Cari nama, kamar, atau nomor pesanan" aria-label="Cari pesanan"></div>
+          <div class="chips" id="filter" style="margin-bottom:12px"></div>
+          <div id="list"></div>
+        </section>
+        <section id="v-manual" class="view hidden"></section>
+        <section id="v-stok" class="view hidden"></section>
+        <section id="v-bantuan" class="view hidden"></section>
+        <section id="v-riwayat" class="view hidden"></section>
+        <section id="v-pelanggan" class="view hidden"></section>
+        <section id="v-keuangan" class="view hidden"></section>
+        <section id="v-atur" class="view hidden"></section>
+      </main>
+    </div>
+  </div>
+  <nav class="bottom" id="bottomNav"></nav>
+  <div class="more hidden" id="more"></div>
+</div>
+<div id="modal" class="modal hidden"><div class="box" id="mbody"></div></div>
+<div id="toast" class="toast hidden" role="status"></div>
+
+<script>
+'use strict';
+// ===== Alamat API: hanya dipakai kalau halaman ini di-host di luar Google (Netlify, GitHub Pages, dll.) =====
+const API_URL = '';   // boleh dikosongkan: alamat web app akan ditanyakan sekali saat pertama dibuka
+if (!(window.google && google.script && google.script.run)) {
+  const alamat = () => {
+    let u = API_URL; try { u = u || localStorage.getItem('w216_api') || ''; } catch (e) {}
+    if (!u) { u = prompt('Masukkan alamat web app (berakhiran /exec):') || ''; if (!/^https:\/\/script\.google\.com\/.+\/exec/.test(u)) throw new Error('Alamat web app tidak valid.'); try { localStorage.setItem('w216_api', u); } catch (e) {} }
+    return u;
+  };
+  const panggil = async (fn, args) => {
+    const res = await fetch(alamat(), { method: 'POST', body: JSON.stringify({ api: fn, args: args }) });
+    const j = await res.json(); if (!j.ok) throw new Error(j.error); return j.hasil;
+  };
+  const runner = (ok, bad) => new Proxy({}, { get: (_, n) => {
+    if (n === 'withSuccessHandler') return f => runner(f, bad);
+    if (n === 'withFailureHandler') return f => runner(ok, f);
+    return (...a) => panggil(n, a).then(r => ok && ok(r), e => bad ? bad({ message: e.message }) : console.error(e));
+  } });
+  window.google = { script: { run: runner(null, null) } };
+}
+
+// ===== Util =====
+const $ = id => document.getElementById(id);
+const rp = n => 'Rp' + String(Math.round(n || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+const esc = s => { const d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; };
+const IC = {
+  list: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>', plus: '<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
+  box: '<path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>', chat: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12z"/><path d="M9 11h6M9 14h4"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-6 6.5-6s6.5 2.5 6.5 6M16 4.5a3.5 3.5 0 0 1 0 7M18 14c2.2.6 3.5 2.6 3.5 5"/>',
+  wallet: '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M16 14h2"/>', gear: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>',
+  more: '<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>', bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 0 0 4 0"/>',
+  check: '<circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>', coin: '<circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16v.01"/>', up: '<path d="M3 17l5-6 4 3 8-9"/><path d="M15 5h5v5"/>' };
+const svg = n => '<svg viewBox="0 0 24 24" aria-hidden="true">' + IC[n] + '</svg>';
+
+let T = '', ROLE = '', D = null, VIEW = 'pesanan', FIL = 'aktif', Q = '', prevBaru = -1, prevBantuan = -1, ctx = null, timer = null, chatNomor = '', chatTimer = null;
+
+function toast(m) { const t = $('toast'); t.textContent = m; t.classList.remove('hidden'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.add('hidden'), 3200); }
+function run(fn, args, ok, bad) {
+  const r = google.script.run.withSuccessHandler(ok || (() => {})).withFailureHandler(e => {
+    const m = (e && e.message) || String(e);
+    if (/Sesi habis/.test(m)) { keluar(); $('lerr').textContent = m; } else (bad || toast)(m);
+  });
+  r[fn].apply(r, args);
+}
+function beep() { try { [0, 0.25].forEach(t => { const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = 880; g.gain.value = 0.15; o.connect(g); g.connect(ctx.destination); o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + 0.15); }); } catch (e) {} }
+function openModal(h) { $('mbody').innerHTML = h; $('modal').classList.remove('hidden'); }
+function closeModal() { $('modal').classList.add('hidden'); $('mbody').innerHTML = ''; clearInterval(chatTimer); chatNomor = ''; }
+const WARNA = ['#ffd9d2', '#d6e4ff', '#d3f0e0', '#ffe9b8', '#e6dcff', '#ffe0c2'];
+const warnaAv = s => WARNA[String(s || '?').split('').reduce((t, c) => t + c.charCodeAt(0), 0) % WARNA.length];
+const avatar = s => '<div class="av" style="background:' + warnaAv(s) + '">' + esc(String(s || '?').trim().charAt(0).toUpperCase()) + '</div>';
+
+// ===== Login (PIN maksimal 6 angka) =====
+function dots() { const n = $('pin').value.length; $('dots').innerHTML = Array.from({ length: 6 }, (_, i) => '<i class="' + (i < n ? 'f' : '') + '"></i>').join(''); }
+function masuk() {
+  $('lerr').textContent = ''; const b = $('masuk'); b.disabled = true;
+  try { ctx = ctx || new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {}
+  run('dashLogin', [$('pin').value], r => {
+    T = r.token; ROLE = r.role; $('pin').value = ''; dots(); b.disabled = false;
+    $('login').classList.add('hidden'); $('app').classList.remove('hidden'); $('whoRole').textContent = ROLE === 'owner' ? 'Owner' : 'Kasir';
+    buildNav(); setView('pesanan'); load(); clearInterval(timer);
+    timer = setInterval(() => { if (!document.hidden) { load(true); tickClock(); } }, 20000);
+  }, m => { $('lerr').textContent = m; b.disabled = false; $('pin').value = ''; dots(); const d = $('dots'); d.classList.remove('shake'); void d.offsetWidth; d.classList.add('shake'); });
+}
+function keluar() {
+  T = ''; ROLE = ''; D = null; prevBaru = -1; prevBantuan = -1; clearInterval(timer); closeModal();
+  $('app').classList.add('hidden'); $('login').classList.remove('hidden'); $('list').innerHTML = ''; ['manual', 'stok', 'bantuan', 'riwayat', 'pelanggan', 'keuangan', 'atur'].forEach(v => $('v-' + v).innerHTML = ''); manualAda = false;
+}
+
+// ===== Navigasi =====
+function menuPeran() {
+  const m = [['pesanan', 'Pesanan', 'list'], ['manual', 'Pesanan baru', 'plus'], ['stok', 'Stok', 'box'], ['bantuan', 'Bantuan', 'chat'], ['riwayat', 'Riwayat', 'clock']];
+  if (ROLE === 'owner') m.push(['pelanggan', 'Pelanggan', 'users']);
+  m.push(['keuangan', ROLE === 'owner' ? 'Keuangan' : 'Kas', 'wallet']);
+  if (ROLE === 'owner') m.push(['atur', 'Pengaturan', 'gear']);
+  return m;
+}
+function buildNav() {
+  const m = menuPeran(), bdg = id => (id === 'bantuan' || id === 'stok') ? '<b class="bdg hidden" data-bdg="' + id + '"></b>' : '';
+  $('sideNav').innerHTML = m.map(x => '<button class="nv" data-nav="' + x[0] + '">' + svg(x[2]) + '<span>' + x[1] + '</span>' + bdg(x[0]) + '</button>').join('');
+  $('bottomNav').innerHTML = m.slice(0, 4).map(x => '<button data-nav="' + x[0] + '">' + svg(x[2]) + '<span>' + (x[0] === 'manual' ? 'Baru' : x[1]) + '</span>' + bdg(x[0]) + '</button>').join('') +
+    '<button data-more="1">' + svg('more') + '<span>Lainnya</span></button>';
+  $('more').innerHTML = m.slice(4).map(x => '<button data-nav="' + x[0] + '">' + svg(x[2]) + '<span>' + x[1] + '</span></button>').join('');
+}
+function setView(v) {
+  VIEW = v; $('more').classList.add('hidden');
+  document.querySelectorAll('.view').forEach(s => s.classList.toggle('hidden', s.id !== 'v-' + v));
+  document.querySelectorAll('[data-nav]').forEach(b => b.classList.toggle('on', b.dataset.nav === v));
+  const nama = menuPeran().filter(x => x[0] === v)[0]; $('judul').textContent = nama ? nama[1] : '';
+  const sec = $('v-' + v); sec.classList.remove('fade'); void sec.offsetWidth; sec.classList.add('fade');
+  if (v === 'pesanan' && D) renderPesanan(); if (v === 'manual') buildManual(); if (v === 'stok') muatStok(); if (v === 'bantuan') muatBantuan();
+  if (v === 'riwayat') gambarRiwayat(); if (v === 'pelanggan') muatPelanggan(); if (v === 'keuangan') muatKeuangan(); if (v === 'atur') muatAtur();
+  window.scrollTo(0, 0);
+}
+function setBadge(id, n) { document.querySelectorAll('[data-bdg="' + id + '"]').forEach(b => { b.textContent = n > 9 ? '9+' : n; b.classList.toggle('hidden', !n); }); }
+
+// ===== Data utama & polling =====
+function load(diam) {
+  run('dashData', [T], r => {
+    D = r;
+    const baru = r.orders.filter(o => o.status === 'Baru').length;
+    if (prevBaru >= 0 && baru > prevBaru) { beep(); toast('Pesanan baru masuk!'); }
+    if (prevBantuan >= 0 && r.bantuan > prevBantuan) { beep(); toast('Ada pelanggan yang butuh admin'); }
+    prevBaru = baru; prevBantuan = r.bantuan; setBadge('bantuan', r.bantuan); setBadge('stok', r.stokMenipis);
+    const t = r.toko; $('tokoPill').textContent = t.buka ? 'Toko buka' : 'Toko tutup'; $('tokoPill').className = 'pill ' + (t.buka ? 'buka' : 'tutup');
+    if (VIEW === 'pesanan') renderPesanan(); if (VIEW === 'bantuan' && !chatNomor) muatBantuan(true);
+  }, diam ? () => {} : null);
+}
+
+// ===== Pesanan =====
+const salam = () => { const j = new Date().getHours(); return j < 4 ? 'Selamat malam' : j < 11 ? 'Selamat pagi' : j < 15 ? 'Selamat siang' : j < 18 ? 'Selamat sore' : 'Selamat malam'; };
+function tickClock() { const d = new Date(); $('clock').textContent = d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace('.', ':'); $('tgl').textContent = d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' }); }
+function saring(o, f) { return f === 'aktif' ? (o.status === 'Baru' || o.status === 'Diproses') : f === 'selesai' ? o.status === 'Selesai' : f === 'batal' ? o.status === 'Batal' : (o.status !== 'Batal' || ROLE === 'owner'); }
+function renderPesanan() {
+  const O = D.orders, n = s => O.filter(o => o.status === s).length, hariIni = O.filter(o => o.tgl === D.hari && o.status !== 'Batal');
+  const omzet = hariIni.reduce((t, o) => t + o.total, 0), pct = hariIni.length ? Math.round(hariIni.filter(o => o.status === 'Selesai').length / hariIni.length * 100) : 0;
+  const belum = O.filter(o => o.status !== 'Batal' && o.bayar !== 'Lunas').length;
+  const k = (cls, ic, num, lab, ex) => '<div class="kpi ' + (ex || '') + '"><div class="ic ' + cls + '">' + svg(ic) + '</div><div><b>' + num + '</b><span>' + lab + '</span></div></div>';
+  $('kpis').innerHTML = k('t-amber', 'bell', n('Baru'), 'Pesanan baru', n('Baru') ? 'pulse' : '') + k('t-info', 'clock', n('Diproses'), 'Diproses') + k('t-ok', 'check', n('Selesai'), 'Selesai') + k('t-brand', 'coin', belum, 'Belum lunas') +
+    (ROLE === 'owner' ? k('t-ok', 'up', rp(omzet), 'Omzet malam ini', 'wide') : '');
+  $('hello').textContent = salam() + ', ' + (ROLE === 'owner' ? 'Owner' : 'Kasir'); tickClock(); $('ringBox').style.setProperty('--p', pct); $('ringPct').textContent = pct + '%';
+  const fl = [['aktif', 'Aktif'], ['selesai', 'Selesai'], ['semua', 'Semua']]; if (ROLE === 'owner') fl.push(['batal', 'Batal']);
+  $('filter').innerHTML = fl.map(f => '<button class="chip' + (FIL === f[0] ? ' on' : '') + '" data-fil="' + f[0] + '">' + f[1] + ' (' + O.filter(o => saring(o, f[0])).length + ')</button>').join('') + '<button class="chip" data-fil="_r">Muat ulang</button>';
+  renderList();
+}
+function renderList() {
+  const q = Q.trim().toLowerCase();
+  let show = D.orders.filter(o => saring(o, FIL) && (!q || ('#' + o.no + ' ' + o.nama + ' ' + o.kamar + ' ' + o.hp + ' ' + o.items.map(i => i.n).join(' ')).toLowerCase().indexOf(q) > -1));
+  if (FIL === 'aktif') show = show.slice().reverse();
+  $('list').innerHTML = show.length ? show.map(kartu).join('') : '<div class="empty"><b>Belum ada pesanan di sini</b>Kami kabari begitu ada yang masuk.</div>';
+}
+function kartu(o, idx) {
+  const aktif = o.status === 'Baru' || o.status === 'Diproses', mnt = Math.max(0, Math.floor((Date.now() - o.ts) / 60000));
+  const umur = aktif && mnt < 600 ? '<span class="age' + (mnt >= 15 ? ' late' : '') + '">' + mnt + ' mnt</span>' : esc(o.jam);
+  const sb = { Baru: 'warn', Diproses: 'info', Selesai: 'ok', Batal: '' }[o.status], bb = o.bayar === 'Lunas' ? 'ok' : o.bayar === 'Perlu cek' ? 'warn' : 'brand';
+  const si = { Baru: 0, Diproses: 1, Selesai: 2 }[o.status];
+  let st = '';
+  if (o.status !== 'Batal') { st = '<div class="steps">'; ['Baru', 'Diproses', 'Selesai'].forEach((s, k) => { st += (k ? '<span class="ln' + (k <= si ? ' on' : '') + '"></span>' : '') + '<span class="st' + (k <= si ? ' on' : '') + (k === si ? ' cur' : '') + '"><i></i>' + s + '</span>'; }); st += '</div>'; }
+  const A = (a, t, c) => '<button class="btn ' + (c || 'sec') + ' s" data-a="' + a + '" data-no="' + o.no + '">' + t + '</button>';
+  let prim = '', sek = '';
+  if (o.status === 'Baru') prim = '<button class="btn lg full prim" data-a="proses" data-no="' + o.no + '">Proses pesanan</button>';
+  else if (o.status === 'Diproses') prim = '<button class="btn ok lg full prim" data-a="selesai" data-no="' + o.no + '">Tandai selesai</button>';
+  if (o.status === 'Baru') sek += A('selesai', 'Langsung selesai');
+  if (o.status !== 'Batal' && o.bayar !== 'Lunas') sek += A('lunas', o.metode === 'QRIS' ? 'Lunas (QRIS)' : 'Tandai lunas');
+  if (o.metode === 'Tunai' && o.total && o.status !== 'Batal') sek += A('kembali', 'Kembalian');
+  if (o.adaBukti) sek += A('bukti', 'Lihat bukti');
+  sek += A('cetak', 'Cetak struk');
+  if (o.hp) sek += A('kirimstruk', 'Kirim struk') + A('chat', 'Chat');
+  if (ROLE === 'owner' && o.status !== 'Batal') sek += A('batal', 'Batalkan', 'danger');
+  const items = o.items.map(it => '<li><span>' + (it.q !== '' && it.q != null ? '<b class="q">' + esc(it.q) + '×</b> ' : '') + esc(it.n) + '</span><b>' + (it.s ? rp(it.s) : '') + '</b></li>').join('');
+  return '<article class="card ord s-' + o.status + ' fade"><div class="head">' + avatar(o.nama) + '<div class="grow"><div class="nm">#' + o.no + ' ' + esc(o.nama) + '</div><div class="muted sm">Kamar ' + esc(o.kamar) + ' · ' + esc(o.sumber) + ' · ' + umur + '</div>' +
+    '<div class="row wrap" style="gap:6px;margin-top:6px"><span class="badge ' + sb + '">' + o.status + '</span><span class="badge ' + bb + '">' + esc(o.metode) + ' · ' + esc(o.bayar) + '</span></div></div></div>' + st +
+    '<ul class="items">' + items + '</ul><div class="tot"><span>Total</span><span>' + (o.total ? rp(o.total) : '<button class="btn sec s" data-a="total" data-no="' + o.no + '">Isi total</button>') + '</span></div>' +
+    (o.catatan && o.catatan !== '-' ? '<div class="note"><b>Catatan:</b> ' + esc(o.catatan) + '</div>' : '') + prim + '<div class="acts">' + sek + '</div></article>';
+}
+const cari = no => D.orders.filter(o => o.no === no)[0];
+
+function aksi(a, no) {
+  const o = cari(no);
+  if (a === 'bukti') return run('dashBukti', [T, no], u => openModal('<h3>Bukti pembayaran #' + no + '</h3><img src="' + u + '" alt="Bukti transfer" style="max-width:100%;max-height:68vh;border-radius:12px;display:block;margin:12px auto"><button class="btn full" data-close>Tutup</button>'));
+  if (a === 'kembali') return modalKembali(o.total);
+  if (a === 'cetak') return cetakStruk(o);
+  if (a === 'kirimstruk') return run('dashKirimStruk', [T, no], () => toast('Struk terkirim ke WhatsApp pelanggan'));
+  if (a === 'chat') return bukaChat(o.hp, o.nama);
+  if (a === 'total') return openModal('<h3>Isi total pesanan #' + no + '</h3><p class="muted sm">Dipakai untuk omzet dan struk.</p><input id="tot" class="in" type="number" inputmode="numeric" min="0" placeholder="Contoh: 28000"><div class="row" style="margin-top:12px"><button class="btn grow" data-simpan-total="' + no + '">Simpan</button><button class="btn sec" data-close>Batal</button></div>');
+  if (a === 'batal') return openModal('<h3>Batalkan pesanan #' + no + '?</h3><p class="muted sm">Pelanggan akan diberi tahu lewat WhatsApp dan stok bahan dikembalikan.</p><label class="l" for="alasan">Alasan (opsional)</label><textarea id="alasan" class="in" rows="2" placeholder="Contoh: stok habis"></textarea><div class="row" style="margin-top:12px"><button class="btn danger grow" data-konfirm-batal="' + no + '">Ya, batalkan</button><button class="btn sec" data-close>Kembali</button></div>');
+  run('dashAksi', [T, no, a, ''], () => { load(); toast('Tersimpan'); });
+}
+function modalKembali(total) {
+  openModal('<h3>Hitung kembalian</h3><div class="muted sm">Total tagihan</div><div style="font-size:1.8rem;font-weight:800;color:var(--brand)">' + rp(total) + '</div><label class="l" for="uang">Uang diterima</label><input id="uang" class="in" type="number" inputmode="numeric" min="0">' +
+    '<div class="chips" style="margin:10px 0"><button class="chip" data-uang="' + total + '">Uang pas</button>' + [20000, 50000, 100000].map(n => '<button class="chip" data-uang="' + n + '">' + rp(n) + '</button>').join('') + '</div><div id="kem" style="font-size:1.5rem;font-weight:800">-</div><button class="btn full" data-close style="margin-top:12px">Tutup</button>');
+  $('uang').dataset.total = total; $('uang').addEventListener('input', hitungKem); $('uang').focus();
+}
+function hitungKem() { const u = $('uang'), v = Number(u.value) || 0, t = Number(u.dataset.total) || 0; $('kem').textContent = !v ? '-' : v >= t ? 'Kembalian ' + rp(v - t) : 'Kurang ' + rp(t - v); }
+
+// ===== Cetak struk (langsung ke printer/PDF, tanpa WhatsApp) =====
+function cetakStruk(o) {
+  const baris = o.items.map(i => '<div>' + (i.q !== '' && i.q != null ? esc(i.q) + 'x ' : '') + esc(i.n) + '</div>' + (i.s ? '<div class="r"><span></span><span>' + rp(i.s) + '</span></div>' : '')).join('');
+  const html = '<!doctype html><html><head><meta charset="utf-8"><title>Struk #' + o.no + '</title><style>@page{size:58mm auto;margin:3mm}body{width:52mm;margin:0;font:12px/1.4 "Courier New",monospace;color:#000}h1{font-size:15px;text-align:center;margin:0}.c{text-align:center}hr{border:0;border-top:1px dashed #000;margin:6px 0}.r{display:flex;justify-content:space-between;gap:6px}.t{font-weight:bold;font-size:13px}</style></head><body>' +
+    '<h1>WARMINDO 216</h1><div class="c">Struk pesanan #' + o.no + '</div><div class="c">' + esc(o.jam) + '</div><hr><div>Nama : ' + esc(o.nama) + '</div><div>Kamar: ' + esc(o.kamar) + '</div><hr>' + baris + '<hr><div class="r t"><span>TOTAL</span><span>' + (o.total ? rp(o.total) : '-') + '</span></div>' +
+    '<div>Bayar: ' + esc(o.metode) + ' (' + esc(o.bayar) + ')</div><hr><div class="c">Terima kasih!</div></body></html>';
+  const f = document.createElement('iframe'); f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0'; document.body.appendChild(f);
+  try { f.contentDocument.open(); f.contentDocument.write(html); f.contentDocument.close(); } catch (e) { f.remove(); return toast('Browser tidak mengizinkan cetak di sini. Pakai Kirim struk.'); }
+  setTimeout(() => { try { f.contentWindow.focus(); f.contentWindow.print(); } catch (e) { toast('Cetak diblokir browser. Pakai Kirim struk.'); } setTimeout(() => f.remove(), 4000); }, 350);
+}
+
+// ===== Chat pelanggan langsung dari dashboard =====
+function bukaChat(nomor, nama) {
+  if (!nomor) return toast('Pelanggan ini tidak punya nomor WhatsApp.');
+  chatNomor = nomor; clearInterval(chatTimer);
+  openModal('<div class="row between"><div><h3>' + esc(nama || 'Pelanggan') + '</h3><div class="muted sm">' + esc(nomor) + '</div></div><button class="btn sec s" data-close>Tutup</button></div><div id="thread" class="thread"><div class="empty sm">Memuat percakapan...</div></div>' +
+    '<div class="composer"><textarea id="pesan" class="in" rows="2" maxlength="1000" placeholder="Tulis balasan..."></textarea><button class="btn" id="kirimPesan">Kirim</button></div><div class="hint">Terkirim otomatis lewat WhatsApp. Bot tidak menyela selama kamu membalas.</div>');
+  muatThread(true); chatTimer = setInterval(() => muatThread(false), 8000);
+}
+function muatThread(awal) {
+  if (!chatNomor) return;
+  run('dashPercakapan', [T, chatNomor], l => {
+    const el = $('thread'); if (!el) return; const dekat = awal || el.scrollHeight - el.scrollTop - el.clientHeight < 90;
+    el.innerHTML = l.length ? l.map(x => '<div class="bub ' + (x.arah === 'Masuk' ? 'in' : 'out' + (/^Admin/.test(x.pengirim) ? ' adm' : '')) + '">' + esc(x.isi) + '<small>' + esc(x.pengirim) + ' · ' + esc(x.waktu) + '</small></div>').join('') : '<div class="empty sm">Belum ada percakapan tercatat.</div>';
+    if (dekat) el.scrollTop = el.scrollHeight;
+  }, () => {});
+}
+function kirimChat() {
+  const t = $('pesan'), b = $('kirimPesan'); if (!t.value.trim()) return; b.disabled = true;
+  run('dashKirimPesan', [T, chatNomor, t.value], () => { t.value = ''; b.disabled = false; muatThread(true); toast('Terkirim'); }, m => { b.disabled = false; toast(m); });
+}
+
+// ===== Pesanan manual =====
+let manualAda = false, mseq = 0;
+function buildManual() {
+  if (manualAda || !D) return; manualAda = true;
+  $('v-manual').innerHTML = '<div class="grid2"><div><div class="card"><h2>Pesanan baru</h2><p class="muted sm" style="margin:0 0 4px">Untuk pembeli yang datang langsung atau memesan lewat telepon.</p>' +
+    '<label class="l" for="m-nama">Nama (opsional)</label><input id="m-nama" class="in" type="text"><label class="l" for="m-kamar">Kamar (opsional)</label><input id="m-kamar" class="in" type="text">' +
+    '<label class="l" for="m-hp">Nomor HP (opsional, untuk kabar status dan struk)</label><input id="m-hp" class="in" type="tel" inputmode="tel"></div></div>' +
+    '<div><div id="m-rows"></div><button class="btn sec full" id="m-add" style="margin-bottom:12px">+ Tambah menu</button>' +
+    '<div class="card"><label class="l" for="m-catatan" style="margin-top:0">Catatan</label><input id="m-catatan" class="in" type="text"><label class="l" for="m-metode">Pembayaran</label><select id="m-metode" class="in"><option>Tunai</option><option>QRIS</option></select>' +
+    '<label class="row" style="margin-top:12px;font-weight:600"><input type="checkbox" id="m-lunas" checked> Sudah dibayar</label>' +
+    '<div class="row between" style="margin-top:14px"><span class="muted">Total</span><b id="m-total" style="font-size:1.5rem;color:var(--brand)">Rp0</b></div><p class="err" id="m-err" role="alert"></p><button class="btn lg full" id="m-kirim">Buat pesanan</button></div></div></div>';
+  manualRow();
+}
+function manualRow() {
+  const el = document.createElement('div'); el.className = 'mrow';
+  const hb = D.habis;
+  el.innerHTML = '<div class="row"><select class="in m-menu grow" aria-label="Menu"><option value="">Pilih menu</option>' + D.katalog.map((k, i) => '<option value="' + i + '"' + (hb.indexOf(i) > -1 ? ' disabled' : '') + '>' + esc(k.n) + ' · ' + rp(k.p[0]) + (k.p[0] !== k.p[1] ? '/' + rp(k.p[1]) : '') + (hb.indexOf(i) > -1 ? ' (habis)' : '') + '</option>').join('') +
+    '</select><button type="button" class="btn ghost s" data-mrm>Hapus</button></div><div class="mopt"><select class="in m-brand hidden" aria-label="Merek mie"><option>Indomie</option><option>Sukses</option></select><select class="in m-rasa hidden" aria-label="Rasa"></select>' +
+    '<select class="in m-telur hidden" aria-label="Telur"><option>Dadar</option><option>Ceplok</option></select><label class="m-mentah hidden"><input type="checkbox"> Mentah</label></div><div class="m-isi"></div>' +
+    '<div class="row between" style="margin-top:10px"><div class="cnt mq"><button type="button" data-mq="-1" aria-label="Kurangi">&minus;</button><output>1</output><button type="button" data-mq="1" aria-label="Tambah">+</button></div><b class="mh" style="color:var(--brand)"></b></div>';
+  $('m-rows').appendChild(el); manualUpdate(el);
+}
+function manualIsi(el) { const j = {}; el.querySelectorAll('.isi').forEach(r => { j[r.dataset.isi] = Number(r.querySelector('output').textContent); }); return j; }
+function renderManualIsi(el, m) {
+  const k = (m && m.k) || [], NK = { nasi: 'Nasi', nasigoreng: 'Nasi goreng', mie: 'Mie', telur: 'Telur' };
+  el.querySelector('.m-isi').innerHTML = k.length ? '<div class="sm muted" style="margin-top:10px">Isi paket (atur jumlah)</div>' + k.map(c => '<div class="isi" data-isi="' + c + '"><span>' + NK[c] + '</span><div class="cnt"><button type="button" data-ib="-1" aria-label="Kurangi ' + NK[c] + '">&minus;</button><output>1</output><button type="button" data-ib="1" aria-label="Tambah ' + NK[c] + '">+</button></div></div>').join('') : '';
+}
+function manualUpdate(el) {
+  const i = el.querySelector('.m-menu').value, m = i === '' ? null : D.katalog[+i], mie = !!m && /Mie/.test(m.n), tel = !!m && /Telur/.test(m.n), br = el.querySelector('.m-brand'), rs = el.querySelector('.m-rasa');
+  br.classList.toggle('hidden', !mie); rs.classList.toggle('hidden', !mie); el.querySelector('.m-telur').classList.toggle('hidden', !tel); el.querySelector('.m-mentah').classList.toggle('hidden', !(m && m.n === 'Mie'));
+  if (el.dataset.menu !== i) { el.dataset.menu = i; renderManualIsi(el, m); }
+  const prev = rs.value; rs.innerHTML = D.rasa[br.value].map(r => '<option' + (r === prev ? ' selected' : '') + '>' + r + '</option>').join('');
+  el.querySelector('.mh').textContent = m ? rp(manualHarga(el)) : ''; manualTotal();
+}
+function manualHarga(el) {
+  const i = el.querySelector('.m-menu').value; if (i === '') return 0;
+  const m = D.katalog[+i], bi = el.querySelector('.m-brand').value === 'Sukses' ? 1 : 0, q = Number(el.querySelector('.mq output').textContent), j = manualIsi(el), komp = m.k || [], pot = D.potongan || 1000;
+  let u = (m.n === 'Mie' && el.querySelector('.m-mentah input').checked) ? D.mentah[bi] : m.p[bi];
+  if (komp.length) u += pot; komp.forEach(k => { u += ((j[k] || 1) - 1) * (k === 'mie' ? D.hargaKomp.mie[bi] : D.hargaKomp[k]); });
+  if (komp.length) u -= pot * Math.min.apply(null, komp.map(k => j[k] || 1)); return u * q;
+}
+function manualTotal() { let t = 0; document.querySelectorAll('#m-rows .mrow').forEach(e => t += manualHarga(e)); $('m-total').textContent = rp(t); }
+function manualKirim() {
+  const items = [];
+  document.querySelectorAll('#m-rows .mrow').forEach(e => { const i = e.querySelector('.m-menu').value; if (i === '') return;
+    items.push({ idx: +i, brand: e.querySelector('.m-brand').value, rasa: e.querySelector('.m-rasa').value, telur: e.querySelector('.m-telur').value, mentah: e.querySelector('.m-mentah input').checked, qty: Number(e.querySelector('.mq output').textContent), jml: manualIsi(e) }); });
+  if (!items.length) { $('m-err').textContent = 'Pilih minimal satu menu.'; return; }
+  $('m-err').textContent = ''; const b = $('m-kirim'); b.disabled = true;
+  run('dashPesananManual', [T, { nama: $('m-nama').value, kamar: $('m-kamar').value, hp: $('m-hp').value, catatan: $('m-catatan').value, metode: $('m-metode').value, lunas: $('m-lunas').checked, items: items }],
+    r => { b.disabled = false; manualAda = false; $('v-manual').innerHTML = ''; toast('Pesanan #' + r.no + ' dibuat'); load(); setView('pesanan'); }, m => { b.disabled = false; $('m-err').textContent = m; });
+}
+
+// ===== Stok bahan =====
+let STOK = null;
+function muatStok() { run('dashStokBahan', [T], s => { STOK = s; gambarStok(); }); }
+function gambarStok() {
+  const bahan = STOK.bahan.map(b => {
+    const pct = b.sisa === null ? 0 : Math.min(100, Math.round(b.sisa / Math.max(b.min * 4, 1) * 100)), kls = b.status === 'Habis' ? 'bad' : b.status === 'Menipis' ? 'warn' : '';
+    const bd = { Aman: 'ok', Menipis: 'warn', Habis: 'brand', 'Tidak dilacak': '' }[b.status];
+    return '<div class="card bahan" data-k="' + b.k + '"><div class="row between"><div><h3>' + esc(b.n) + '</h3><div class="muted sm">' + esc(b.satuan) + ' · minimum ' + b.min + '</div></div><span class="badge ' + bd + '">' + b.status + '</span></div>' +
+      '<div class="big">' + (b.sisa === null ? '<small>Belum dilacak. Isi sisa untuk mulai.</small>' : b.sisa + ' <small>' + esc(b.satuan) + '</small>') + '</div><div class="bar ' + kls + '"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="row wrap" style="margin-top:12px;gap:8px"><input class="in" type="number" min="0" inputmode="numeric" placeholder="Jumlah" style="width:110px" aria-label="Jumlah ' + esc(b.n) + '"><button class="btn s" data-bahan="set">Atur sisa</button><button class="btn sec s" data-bahan="tambah">+ Belanja</button><button class="btn ghost s" data-bahan="min">Minimum</button>' + (b.sisa !== null ? '<button class="btn ghost s" data-bahan="stop">Berhenti melacak</button>' : '') + '</div></div>';
+  }).join('');
+  const menu = STOK.menu.map(m => '<div class="row" style="padding:10px 0;border-bottom:1px dashed var(--line);gap:12px"><div class="grow"><div class="b">' + esc(m.n) + '</div><div class="muted sm">' + (m.sisa === null ? 'Stok tidak dilacak' : 'Perkiraan sisa ± ' + m.sisa + ' porsi') + '</div></div>' +
+    (m.otomatis ? '<span class="badge brand">Habis (bahan)</span>' : '') + '<label class="sw bad" title="Tandai habis manual"><input type="checkbox" data-stok="' + m.idx + '"' + (m.manual ? ' checked' : '') + ' aria-label="Habis manual: ' + esc(m.n) + '"><i></i></label></div>').join('');
+  $('v-stok').innerHTML = '<p class="muted sm" style="margin:0 0 12px">Stok berkurang otomatis setiap pesanan masuk dan kembali kalau pesanan dibatalkan. Bahan yang habis membuat menunya otomatis tidak bisa dipesan.</p><div class="grid2"><div>' + bahan + '</div><div><div class="card"><h2>Ketersediaan menu</h2>' + menu + '<p class="hint">Geser ke kanan untuk menandai habis manual.</p></div></div></div>';
+}
+
+// ===== Bantuan (chat dialihkan dari bot) =====
+function muatBantuan(diam) {
+  run('dashBantuan', [T], l => {
+    if (diam && document.activeElement && document.activeElement.tagName === 'TEXTAREA') return;
+    $('v-bantuan').innerHTML = '<p class="muted sm" style="margin:0 0 12px">Pertanyaan yang diteruskan bot. Balas langsung dari sini, terkirim otomatis lewat WhatsApp. Bot diam di chat itu sampai kamu menandainya selesai.</p>' +
+      (l.length ? '<div class="grid2">' + l.map(x => { const w = x.status === 'Menunggu';
+        return '<div class="card' + (w ? ' ord' : '') + ' fade"><div class="head" style="display:flex;gap:12px">' + avatar(x.nama) + '<div class="grow"><div class="nm b">' + esc(x.nama || 'Tanpa nama') + '</div><div class="muted sm">' + esc(x.nomor) + ' · ' + esc(x.waktu) + '</div></div><span class="badge ' + (w ? 'warn' : 'ok') + '">' + esc(x.status) + '</span></div>' +
+          '<div class="note">' + esc(x.pesan) + '</div>' + (w ? '<textarea id="bj' + x.baris + '" class="in" rows="2" maxlength="800" style="margin-top:10px" placeholder="Jawaban yang kamu berikan (opsional). Disimpan agar bot bisa menjawab pertanyaan serupa lain kali."></textarea>' +
+          '<div class="acts"><button class="btn s" data-chat="' + esc(x.nomor) + '" data-nama="' + esc(x.nama) + '">Balas di dashboard</button><button class="btn ok s" data-bsel="' + x.baris + '">Tandai selesai</button></div>' : '<div class="acts"><button class="btn sec s" data-chat="' + esc(x.nomor) + '" data-nama="' + esc(x.nama) + '">Lihat percakapan</button></div>') + '</div>'; }).join('') + '</div>'
+        : '<div class="empty"><b>Belum ada pelanggan yang butuh bantuan</b>Bot menangani semuanya dengan baik.</div>');
+  }, diam ? () => {} : null);
+}
+
+// ===== Riwayat =====
+let RW = { q: '', dari: '', sampai: '', status: '', metode: '' };
+function gambarRiwayat() {
+  $('v-riwayat').innerHTML = '<div class="card"><div class="grid2" style="gap:10px"><div><label class="l" style="margin-top:0" for="rw-q">Cari</label><input id="rw-q" class="in" type="search" value="' + esc(RW.q) + '" placeholder="Nama, kamar, nomor, menu"></div>' +
+    '<div class="row" style="gap:10px"><div class="grow"><label class="l" style="margin-top:0" for="rw-dari">Dari</label><input id="rw-dari" class="in" type="date" value="' + RW.dari + '"></div><div class="grow"><label class="l" style="margin-top:0" for="rw-sampai">Sampai</label><input id="rw-sampai" class="in" type="date" value="' + RW.sampai + '"></div></div></div>' +
+    '<div class="row wrap" style="gap:10px;margin-top:10px"><select id="rw-status" class="in grow"><option value="">Semua status</option>' + ['Baru', 'Diproses', 'Selesai', 'Batal'].map(s => '<option' + (RW.status === s ? ' selected' : '') + '>' + s + '</option>').join('') + '</select>' +
+    '<select id="rw-metode" class="in grow"><option value="">Semua pembayaran</option><option' + (RW.metode === 'Tunai' ? ' selected' : '') + '>Tunai</option><option' + (RW.metode === 'QRIS' ? ' selected' : '') + '>QRIS</option></select><button class="btn" id="rw-cari">Terapkan</button></div></div><div id="rw-hasil"><div class="empty">Memuat...</div></div>';
+  cariRiwayat();
+}
+function cariRiwayat() {
+  run('dashRiwayat', [T, RW], r => {
+    $('rw-hasil').innerHTML = '<div class="grid3"><div class="stat"><b>' + r.jumlah + '</b><span>Pesanan</span></div><div class="stat"><b>' + rp(r.omzet) + '</b><span>Omzet (tanpa batal)</span></div><div class="stat"><b>' + (r.jumlah ? rp(r.omzet / Math.max(1, r.daftar.filter(o => o.status !== 'Batal').length)) : 'Rp0') + '</b><span>Rata-rata</span></div></div>' +
+      (r.daftar.length ? '<div class="card" style="padding:4px 14px">' + r.daftar.map(o => '<div class="row" style="padding:11px 0;border-bottom:1px dashed var(--line);gap:12px">' + avatar(o.nama) + '<div class="grow"><div class="b">#' + o.no + ' ' + esc(o.nama) + ' <span class="muted sm" style="font-weight:500">· kamar ' + esc(o.kamar) + '</span></div><div class="muted sm">' + esc(o.tanggal) + ' ' + esc(o.jam) + ' · ' + esc(o.sumber) + '</div></div><div style="text-align:right"><div class="b">' + (o.total ? rp(o.total) : '-') + '</div><span class="badge ' + ({ Baru: 'warn', Diproses: 'info', Selesai: 'ok', Batal: '' }[o.status]) + '">' + o.status + '</span> <span class="badge ' + (o.bayar === 'Lunas' ? 'ok' : 'warn') + '">' + esc(o.metode) + '</span></div></div>').join('') + '</div>' + (r.jumlah > r.daftar.length ? '<p class="muted sm">Menampilkan ' + r.daftar.length + ' terbaru dari ' + r.jumlah + ' pesanan. Persempit pencarian untuk melihat yang lain.</p>' : '') : '<div class="empty"><b>Tidak ada pesanan yang cocok</b>Coba ubah filternya.</div>');
+  });
+}
+
+// ===== Pelanggan (owner) =====
+function muatPelanggan(q) {
+  if (!$('pl-q')) $('v-pelanggan').innerHTML = '<div class="tools"><input id="pl-q" class="in" type="search" placeholder="Cari nama, kamar, atau nomor"></div><div id="pl-hasil"><div class="empty">Memuat...</div></div>';
+  run('dashPelanggan', [T, q || ($('pl-q').value || '')], r => {
+    $('pl-hasil').innerHTML = '<div class="muted sm" style="margin-bottom:10px">' + r.jumlah + ' pelanggan, diurutkan dari belanja terbesar</div>' + (r.daftar.length ? '<div class="grid2">' + r.daftar.map(p => '<div class="card"><div class="row" style="gap:12px">' + avatar(p.nama) + '<div class="grow"><div class="b">' + esc(p.nama) + '</div><div class="muted sm">Kamar ' + esc(p.kamar) + (p.hp ? ' · ' + esc(p.hp) : '') + '</div></div>' + (p.hp ? '<button class="btn sec s" data-chat="' + esc(p.hp) + '" data-nama="' + esc(p.nama) + '">Chat</button>' : '') + '</div>' +
+      '<div class="grid3" style="margin:12px 0 0"><div class="stat"><b>' + p.n + '×</b><span>Pesanan</span></div><div class="stat"><b>' + rp(p.total) + '</b><span>Total belanja</span></div><div class="stat"><b>' + esc(String(p.terakhir).slice(5)) + '</b><span>Terakhir</span></div></div></div>').join('') + '</div>' : '<div class="empty"><b>Belum ada pelanggan</b></div>');
+  });
+}
+
+// ===== Keuangan: kas (kasir) / laporan + pengeluaran (owner) =====
+let KEU = 'laporan', PRE = 1, BLN = '';
+function muatKeuangan() { if (ROLE === 'owner') { gambarKeu(); } else muatKas(); }
+function muatKas() {
+  run('dashKas', [T], r => {
+    $('v-keuangan').innerHTML = '<div class="card"><h2>Kas malam ini</h2><div class="grid3"><div class="stat"><b>' + rp(r.tunai) + '</b><span>Tunai masuk</span></div><div class="stat"><b>' + rp(r.qris) + '</b><span>QRIS masuk</span></div><div class="stat"><b>' + rp(r.tunai + r.qris) + '</b><span>Total masuk</span></div></div>' +
+      [['Pesanan (tidak batal)', r.jumlah], ['Sudah selesai', r.selesai], ['Belum lunas', r.belum.n + ' pesanan (' + rp(r.belum.total) + ')'], ['Dibatalkan', r.batal]].map(x => '<div class="row between" style="padding:8px 0;border-bottom:1px dashed var(--line)"><span class="muted">' + x[0] + '</span><b>' + x[1] + '</b></div>').join('') +
+      '<div class="acts"><button class="btn" data-a2="kembalian">Kalkulator kembalian</button><button class="btn sec" data-a2="muat">Muat ulang</button></div><p class="hint">Hanya pesanan yang sudah ditandai lunas dihitung sebagai uang masuk. Hari usaha berganti pukul 06.00.</p></div>';
+  });
+}
+function gambarKeu() {
+  $('v-keuangan').innerHTML = '<div class="chips" style="margin-bottom:12px"><button class="chip' + (KEU === 'laporan' ? ' on' : '') + '" data-keu="laporan">Laporan penjualan</button><button class="chip' + (KEU === 'pengeluaran' ? ' on' : '') + '" data-keu="pengeluaran">Pengeluaran</button></div><div id="keu-isi"></div>';
+  if (KEU === 'laporan') muatLaporan(); else muatPengeluaran();
+}
+function muatLaporan() {
+  $('keu-isi').innerHTML = '<div class="chips" style="margin-bottom:12px">' + [[1, 'Hari ini'], [7, '7 hari'], [30, '30 hari']].map(p => '<button class="chip' + (PRE === p[0] ? ' on' : '') + '" data-per="' + p[0] + '">' + p[1] + '</button>').join('') + '</div><div id="lap">Memuat...</div>';
+  run('dashRingkasan', [T, PRE], r => {
+    const mx = a => Math.max.apply(null, a.concat([1])), bar = (l, v, m, t) => '<div class="r"><span class="l">' + esc(l) + '</span><div class="grow bar"><i style="width:' + Math.round(v / m * 100) + '%"></i></div><span class="v">' + t + '</span></div>';
+    const blok = (j, o) => '<div class="card"><h3>' + j + '</h3>' + (Object.keys(o).map(k => '<div class="row between" style="padding:7px 0;border-bottom:1px dashed var(--line)"><span>' + esc(k) + '</span><span><b>' + o[k].n + '</b> pesanan · ' + rp(o[k].total) + '</span></div>').join('') || '<span class="muted">Belum ada data.</span>') + '</div>';
+    const dl = r.prev.omzet ? Math.round((r.omzet - r.prev.omzet) / r.prev.omzet * 100) : null;
+    $('lap').innerHTML = '<div class="grid3"><div class="stat"><b>' + rp(r.omzet) + '</b><span>Omzet</span></div><div class="stat"><b>' + r.jumlah + '</b><span>Pesanan</span></div><div class="stat"><b>' + rp(r.jumlah ? r.omzet / r.jumlah : 0) + '</b><span>Rata-rata</span></div></div>' +
+      '<div class="grid3"><div class="stat"><b>' + rp(r.pengeluaran) + '</b><span>Pengeluaran</span></div><div class="stat"><b style="color:' + (r.laba >= 0 ? 'var(--ok)' : 'var(--brand)') + '">' + rp(r.laba) + '</b><span>Laba kasar</span></div><div class="stat"><b>' + (dl === null ? '-' : (dl >= 0 ? '▲ ' : '▼ ') + Math.abs(dl) + '%') + '</b><span>vs periode lalu</span></div></div>' +
+      (r.tanpaHarga ? '<p class="muted sm">' + r.tanpaHarga + ' pesanan belum ada totalnya, jadi belum masuk omzet.</p>' : '') + (r.belum.n ? '<div class="card"><h3>Belum lunas</h3><b>' + r.belum.n + ' pesanan, ' + rp(r.belum.total) + '</b></div>' : '') +
+      '<div class="grid2">' + blok('Metode bayar', r.metode) + blok('Asal pesanan', r.sumber) + '</div>' +
+      '<div class="grid2"><div class="card bars"><h3>Menu terlaris</h3>' + (r.topMenu.map((m, k) => '<div class="r"><span class="rk">' + (k + 1) + '</span><span class="grow" style="overflow:hidden;text-overflow:ellipsis">' + esc(m.n) + '</span><span class="v">' + m.q + '×</span></div>').join('') || '<span class="muted">Belum ada data.</span>') + '</div>' +
+      '<div class="card bars"><h3>Jam tersibuk</h3>' + (r.jamList.map(j => bar(j.jam + ':00', j.n, mx(r.jamList.map(x => x.n)), j.n + ' pesanan')).join('') || '<span class="muted">Belum ada data.</span>') + '</div></div>' +
+      (r.hari > 1 ? '<div class="card bars"><h3>Omzet per hari</h3>' + r.hariList.map(x => bar(x.tgl.slice(5), x.total, mx(r.hariList.map(y => y.total)), rp(x.total))).join('') + '</div>' : '') +
+      '<div class="card"><h3>Pelanggan teratas</h3>' + (r.topPel.map(p => '<div class="row between" style="padding:7px 0;border-bottom:1px dashed var(--line)"><span>' + esc(p.nama) + ', ' + esc(p.kamar) + '</span><span><b>' + p.n + '×</b> · ' + rp(p.total) + '</span></div>').join('') || '<span class="muted">Belum ada data.</span>') + '</div><p class="muted sm">Pesanan batal (' + r.batal + ') tidak dihitung.</p>';
+  });
+}
+function muatPengeluaran() {
+  run('dashPengeluaran', [T, BLN], r => {
+    BLN = r.bulan; const mx = Math.max.apply(null, Object.keys(r.perKategori).map(k => r.perKategori[k]).concat([1]));
+    $('keu-isi').innerHTML = '<div class="grid2"><div class="card"><h2>Catat pengeluaran</h2><label class="l" style="margin-top:0" for="pg-tgl">Tanggal</label><input id="pg-tgl" class="in" type="date"><label class="l" for="pg-kat">Kategori</label><select id="pg-kat" class="in">' + r.kategori.map(k => '<option>' + esc(k) + '</option>').join('') + '</select>' +
+      '<label class="l" for="pg-nom">Nominal (Rp)</label><input id="pg-nom" class="in" type="number" min="1" inputmode="numeric"><label class="l" for="pg-cat">Catatan</label><input id="pg-cat" class="in" type="text" maxlength="150"><p class="err" id="pg-err" role="alert"></p><button class="btn full" id="pg-simpan">Simpan pengeluaran</button></div>' +
+      '<div><div class="card"><div class="row between"><h2>Bulan</h2><input id="pg-bln" class="in" type="month" value="' + esc(r.bulan) + '" style="width:auto"></div><div style="font-size:1.6rem;font-weight:800;color:var(--brand);margin:8px 0">' + rp(r.total) + '</div><div class="bars">' +
+      (Object.keys(r.perKategori).map(k => '<div class="r"><span class="l">' + esc(k) + '</span><div class="grow bar"><i style="width:' + Math.round(r.perKategori[k] / mx * 100) + '%"></i></div><span class="v">' + rp(r.perKategori[k]) + '</span></div>').join('') || '<span class="muted">Belum ada pengeluaran bulan ini.</span>') + '</div></div>' +
+      '<div class="card" style="padding:4px 14px">' + (r.daftar.length ? r.daftar.map(x => '<div class="row between" style="padding:10px 0;border-bottom:1px dashed var(--line)"><div><div class="b">' + esc(x.kategori) + '</div><div class="muted sm">' + esc(x.tanggal) + (x.catatan ? ' · ' + esc(x.catatan) : '') + '</div></div><b>' + rp(x.nominal) + '</b></div>').join('') : '<div class="empty sm">Belum ada catatan.</div>') + '</div></div></div>';
+    $('pg-tgl').value = new Date().toISOString().slice(0, 10);
+  });
+}
+
+// ===== Pengaturan (owner) =====
+function muatAtur() {
+  $('v-atur').innerHTML = '<div class="grid2"><div><div class="card sehat" id="sehat"><h2>Kesehatan sistem</h2><div class="muted">Memeriksa...</div></div><div class="card"><h2>Status toko</h2><p id="tokoInfo"></p><div class="row wrap" style="gap:8px"><button class="btn sec s" data-mode="auto">Ikuti jadwal</button><button class="btn danger s" data-mode="tutup">Tutup paksa</button><button class="btn ok s" data-mode="buka">Buka paksa</button></div><p class="hint">Berlaku sampai kamu kembali ke "Ikuti jadwal".</p></div>' +
+    '<div id="pg"></div></div><div><div id="botcard"></div><div class="card"><h2>Ganti PIN</h2><label class="l" style="margin-top:0" for="pj">PIN untuk</label><select id="pj" class="in"><option value="kasir">Kasir</option><option value="owner">Owner</option></select><label class="l" for="pb">PIN baru (4 sampai 6 angka)</label><input id="pb" class="in" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password"><p class="err" id="pe" role="alert"></p><button class="btn" id="pin-simpan">Simpan PIN</button></div>' +
+    '<div class="card" id="sheetcard"><h2>Google Sheet</h2><p class="muted sm" style="margin-top:0">Semua data tersimpan di Google Sheet. Rapikan tampilannya (warna, filter, grafik, validasi) dengan satu klik. Aman diulang.</p><div class="row wrap" style="gap:8px"><a id="sheetLink" class="btn sec" target="_blank" rel="noopener" href="#">Buka Google Sheet</a><button class="btn" id="sheet-rapi">Rapikan semua sheet</button></div></div>' +
+    '<div class="card"><h2>Log aktivitas</h2><div id="log" class="muted">Memuat...</div></div></div></div>';
+  run('dashKesehatan', [T], r => {
+    r = r && r.cek ? r : { cek: [], gagal24: 0, log: [] };
+    $('sehat').innerHTML = '<h2>Kesehatan sistem</h2>' + r.cek.map(c => '<div class="r"><span class="d ' + (c.ok === true ? 'ok' : c.ok === false ? 'bad' : 'info') + '">' + (c.ok === true ? '✓' : c.ok === false ? '✗' : '!') + '</span><span class="grow" style="word-break:break-word">' + esc(c.label) + (c.ok === false && c.saran ? '<div class="muted sm">' + esc(c.saran) + '</div>' : '') + '</span></div>').join('') +
+      '<div class="divider"></div><h3>Masalah bot 24 jam terakhir: ' + r.gagal24 + '</h3>' + (r.log.length ? r.log.map(x => '<div class="logrow"><b>' + esc(x.jenis) + '</b> ' + esc(x.nomor) + ' · ' + esc(x.detail) + '<div class="muted">' + esc(x.waktu) + '</div></div>').join('') : '<div class="muted sm">Belum ada catatan.</div>');
+  }, m => { $('sehat').innerHTML = '<h2>Kesehatan sistem</h2><div class="err">' + esc(m) + '</div>'; });
+  run('dashPengaturan', [T], p => {
+    if (D) renderToko(); $('sheetLink').href = p.sheetUrl;
+    $('pg').innerHTML = '<div class="card"><h2>Jam buka dan notifikasi</h2><div class="row" style="gap:10px"><div class="grow"><label class="l" style="margin-top:0" for="jb">Buka</label><input id="jb" class="in" type="time" value="' + p.buka + '"></div><div class="grow"><label class="l" style="margin-top:0" for="jt">Tutup</label><input id="jt" class="in" type="time" value="' + p.tutup + '"></div></div>' +
+      '<div class="row" style="margin-top:14px"><div class="grow"><div class="b">Kabari pelanggan saat status berubah</div><div class="muted sm">Diproses, selesai, dibatalkan (WhatsApp)</div></div><label class="sw"><input type="checkbox" id="nt"' + (p.notif ? ' checked' : '') + '><i></i></label></div>' +
+      '<div class="row" style="margin-top:12px"><div class="grow"><div class="b">Konfirmasi saat pesanan masuk</div><div class="muted sm">Pesan otomatis ke pelanggan</div></div><label class="sw"><input type="checkbox" id="kf"' + (p.konfirm ? ' checked' : '') + '><i></i></label></div><p class="err" id="ge" role="alert"></p><button class="btn" id="pg-simpan">Simpan pengaturan</button></div>';
+    $('botcard').innerHTML = '<div class="card"><h2>Chatbot pelanggan</h2><p class="muted sm" style="margin-top:0">Menjawab chat WhatsApp yang bukan format pesanan, membaca data dari Google Sheet (Info Warung, Promo, Menu, FAQ Bot), dan mengalihkan ke admin kalau tidak bisa menjawab.</p>' +
+      '<div class="row"><div class="grow b">Bot aktif</div><label class="sw"><input type="checkbox" id="bt"' + (p.botAktif ? ' checked' : '') + '><i></i></label></div><p class="sm" style="margin:10px 0">Kecerdasan AI: ' + (p.aiAda ? '<b style="color:var(--ok)">aktif lewat ' + (p.n8n ? 'n8n' : 'Claude') + '</b>' : '<b style="color:var(--brand)">belum aktif</b> (isi N8N_WEBHOOK_URL atau ANTHROPIC_API_KEY di Script Properties)') + '</p>' +
+      '<label class="l" for="binfo">Info tambahan untuk bot (opsional)</label><textarea id="binfo" class="in" rows="3" maxlength="1500" placeholder="Contoh: Kami tidak melayani antar ke luar kampus.">' + esc(p.botInfo) + '</textarea><p class="err" id="be" role="alert"></p><button class="btn" id="bot-simpan">Simpan bot</button><p class="hint">Versi kode: ' + esc(p.versi) + '</p></div>';
+  });
+  run('dashLog', [T], l => { $('log').innerHTML = l.length ? l.map(x => '<div class="logrow"><b>' + esc(x.peran) + '</b> · ' + esc(x.aksi) + (x.no ? ' #' + esc(x.no) : '') + (x.detail ? ' (' + esc(x.detail) + ')' : '') + '<div class="muted">' + esc(x.waktu) + '</div></div>').join('') : 'Belum ada aktivitas.'; });
+}
+function renderToko() {
+  const t = D.toko; if (!$('tokoInfo')) return;
+  $('tokoInfo').innerHTML = 'Sekarang: <b>' + (t.buka ? 'Buka' : 'Tutup') + '</b><br>Mode: <b>' + (t.mode === 'auto' ? 'Ikuti jadwal (' + esc(t.jam) + ' WIB)' : t.mode === 'buka' ? 'Buka paksa' : 'Tutup paksa') + '</b>';
+}
+
+// ===== Event =====
+$('masuk').onclick = masuk; $('keluar').onclick = keluar; $('keluar2').onclick = keluar; dots();
+$('pad').addEventListener('click', e => { const b = e.target.closest('[data-k]'); if (!b) return; const p = $('pin'); if (b.dataset.k === 'del') p.value = p.value.slice(0, -1); else if (p.value.length < 6) p.value += b.dataset.k; $('lerr').textContent = ''; dots(); });
+$('pin').addEventListener('input', () => { $('pin').value = $('pin').value.replace(/\D/g, '').slice(0, 6); dots(); });
+document.addEventListener('keydown', e => { if ($('login').classList.contains('hidden') || e.target === $('pin')) return;
+  if (/^\d$/.test(e.key) && $('pin').value.length < 6) { $('pin').value += e.key; dots(); } else if (e.key === 'Backspace') { $('pin').value = $('pin').value.slice(0, -1); dots(); } else if (e.key === 'Enter') masuk(); });
+$('cari').addEventListener('input', e => { Q = e.target.value; if (D) renderList(); });
+$('modal').addEventListener('click', e => { if (e.target === $('modal')) closeModal(); });
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.dataset && t.dataset.stok !== undefined) run('dashSetStok', [T, +t.dataset.stok, t.checked], h => { if (D) D.habis = h; toast('Ketersediaan menu diperbarui'); muatStok(); }, m => { toast(m); muatStok(); });
+  else if (t.closest && t.closest('#m-rows')) manualUpdate(t.closest('.mrow'));
+  else if (t.id === 'pg-bln') { BLN = t.value; muatPengeluaran(); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && e.target.id === 'pesan') { e.preventDefault(); kirimChat(); } if (e.key === 'Escape') closeModal(); });
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-nav],[data-more],[data-fil],[data-a],[data-a2],[data-per],[data-mode],[data-close],[data-uang],[data-simpan-total],[data-konfirm-batal],[data-mq],[data-mrm],[data-ib],[data-bsel],[data-chat],[data-bahan],[data-keu]');
+  const id = e.target.id;
+  if (!el && ['m-add', 'm-kirim', 'pin-simpan', 'pg-simpan', 'bot-simpan', 'kirimPesan', 'pg-simpan', 'rw-cari', 'sheet-rapi'].indexOf(id) < 0 && id !== 'pg-simpan') { if (!e.target.closest('#more')) $('more').classList.add('hidden'); return; }
+  const d = el ? el.dataset : {};
+  if (d.nav) setView(d.nav);
+  else if (d.more) $('more').classList.toggle('hidden');
+  else if (d.fil) { if (d.fil === '_r') load(); else { FIL = d.fil; renderPesanan(); } }
+  else if (d.a) aksi(d.a, Number(d.no));
+  else if (d.a2) { if (d.a2 === 'kembalian') modalKembali(0); else muatKas(); }
+  else if (d.per) { PRE = Number(d.per); muatLaporan(); }
+  else if (d.keu) { KEU = d.keu; gambarKeu(); }
+  else if (d.mode) run('dashToko', [T, d.mode], t => { D.toko = t; renderToko(); load(true); toast('Status toko diubah'); });
+  else if (el && el.hasAttribute('data-close')) closeModal();
+  else if (d.uang) { $('uang').value = d.uang; hitungKem(); }
+  else if (d.simpanTotal) run('dashTotal', [T, Number(d.simpanTotal), $('tot').value], () => { closeModal(); load(); toast('Total tersimpan'); });
+  else if (d.konfirmBatal) run('dashAksi', [T, Number(d.konfirmBatal), 'batal', $('alasan').value], () => { closeModal(); load(); toast('Pesanan dibatalkan'); });
+  else if (d.mq) { const q = el.parentNode.querySelector('output'); q.textContent = Math.min(50, Math.max(1, Number(q.textContent) + Number(d.mq))); manualUpdate(el.closest('.mrow')); }
+  else if (d.ib) { const o = el.parentNode.querySelector('output'); o.textContent = Math.min(10, Math.max(1, Number(o.textContent) + Number(d.ib))); manualUpdate(el.closest('.mrow')); }
+  else if (el && el.hasAttribute('data-mrm')) { if ($('m-rows').children.length > 1) { el.closest('.mrow').remove(); manualTotal(); } }
+  else if (d.bsel) run('dashBantuanSelesai', [T, Number(d.bsel), ($('bj' + d.bsel) || {}).value || ''], () => { muatBantuan(); load(true); toast('Selesai. Bot aktif lagi untuk chat itu'); });
+  else if (d.chat) bukaChat(d.chat, d.nama);
+  else if (d.bahan) { const kartuB = el.closest('.bahan'), k = kartuB.dataset.k, v = kartuB.querySelector('input').value, mode = d.bahan === 'stop' ? 'set' : d.bahan;
+    if (d.bahan !== 'stop' && v === '') return toast('Isi jumlahnya dulu.'); run('dashSetBahan', [T, k, d.bahan === 'stop' ? '' : v, mode], s => { STOK = s; gambarStok(); toast('Stok diperbarui'); }); }
+  else if (id === 'm-add') manualRow();
+  else if (id === 'm-kirim') manualKirim();
+  else if (id === 'kirimPesan') kirimChat();
+  else if (id === 'rw-cari') { RW = { q: $('rw-q').value, dari: $('rw-dari').value, sampai: $('rw-sampai').value, status: $('rw-status').value, metode: $('rw-metode').value }; cariRiwayat(); }
+  else if (id === 'pin-simpan') run('dashGantiPin', [T, $('pj').value, $('pb').value], () => { $('pb').value = ''; $('pe').textContent = ''; toast('PIN diganti'); }, m => { $('pe').textContent = m; });
+  else if (id === 'pg-simpan') {
+    if ($('pg-tgl')) run('dashTambahPengeluaran', [T, { tanggal: $('pg-tgl').value, kategori: $('pg-kat').value, nominal: $('pg-nom').value, catatan: $('pg-cat').value }], () => { toast('Pengeluaran tersimpan'); muatPengeluaran(); }, m => { $('pg-err').textContent = m; });
+    else run('dashSimpanPengaturan', [T, { buka: $('jb').value, tutup: $('jt').value, notif: $('nt').checked, konfirm: $('kf').checked }], () => { $('ge').textContent = ''; toast('Pengaturan disimpan'); load(true); }, m => { $('ge').textContent = m; });
+  }
+  else if (id === 'bot-simpan') run('dashSimpanBot', [T, { aktif: $('bt').checked, info: $('binfo').value }], () => { $('be').textContent = ''; toast('Pengaturan bot disimpan'); }, m => { $('be').textContent = m; });
+  else if (id === 'sheet-rapi') { const b = e.target; b.disabled = true; b.textContent = 'Merapikan...'; run('dashSiapkanSheet', [T], l => { b.disabled = false; b.textContent = 'Rapikan semua sheet'; openModal('<h3>Hasil merapikan sheet</h3><div class="sm" style="margin:10px 0;line-height:1.7">' + l.map(x => esc(x)).join('<br>') + '</div><button class="btn full" data-close>Tutup</button>'); }, m => { b.disabled = false; b.textContent = 'Rapikan semua sheet'; toast(m); }); }
+});
+
+</script>
+</body>
+</html>
